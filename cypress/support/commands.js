@@ -1,10 +1,7 @@
-Cypress.Commands.add('fillMandatoryFieldsAndSubmit', () => {
-    const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 20)
-
-    cy.get('#firstName').type('Ricalinea')
-    cy.get('#lastName').type('Nascimento')
-    cy.get('#email').type('ricalinia@hotmail.com')
-    cy.get('#open-text-area').type(longText, { delay: 0 })
-    cy.get('.button[type="submit"]').click()
-
+Cypress.Commands.add('fillMandatoryFieldsAndSubmit', data => {
+    cy.get('#firstName').type(data.firstName)
+    cy.get('#lastName').type(data.lastName)
+    cy.get('#email').type(data.email)
+    cy.get('#open-text-area').type(data.text)
+    cy.contains('button', 'Enviar').click()
 })

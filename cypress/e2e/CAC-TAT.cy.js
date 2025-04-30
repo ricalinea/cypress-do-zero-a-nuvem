@@ -6,14 +6,14 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
   })
 
-  it('preenche os campos obrigatórios e envia o formulário', () => {
-    const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 20)
+  it.only('preenche os campos obrigatórios e envia o formulário', () => {
+    const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 2)
 
     cy.get('#firstName').type('Ricalinea')
     cy.get('#lastName').type('Nascimento')
     cy.get('#email').type('ricalinia@hotmail.com')
     cy.get('#open-text-area').type(longText, { delay: 0 })
-    cy.get('.button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click
 
     cy.get('.success').should('be.visible')
   })
@@ -26,7 +26,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#lastName').type('Nascimento')
     cy.get('#email').type('ricalinia@hotmail,com')
     cy.get('#open-text-area').type(longText, { delay: 0 })
-    cy.get('.button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click
 
     cy.get('.error > strong').should('be.visible')
 
@@ -45,7 +45,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#email').type('ricalinia@hotmail,com')
     cy.get('#open-text-area').type('Teste')
     cy.get('#phone-checkbox').click()
-    cy.get('.button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click
 
     cy.get('.error > strong').should('be.visible')
 
@@ -75,14 +75,21 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
   })
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
-  cy.get('.button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click
   
   cy.get('.error > strong').should('be.visible')
 
   })
 
-  it.only('envia o formuário com sucesso usando um comando customizado', ()  => {
-    cy.fillMandatoryFieldsAndSubmit()
+  it('envia o formuário com sucesso usando um comando customizado', ()  => {
+    const data = {
+      firstName: 'Ana',
+      lastName: 'Silva',
+      email: 'ana.cac-tat@gmail.com',
+      text: 'Teste teste teste teste teste.'
+    }
+
+    cy.fillMandatoryFieldsAndSubmit(data)
 
     cy.get('.success').should('be.visible')
   })
