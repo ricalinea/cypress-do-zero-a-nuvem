@@ -6,14 +6,14 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
   })
 
-  it.only('preenche os campos obrigatórios e envia o formulário', () => {
+  it('preenche os campos obrigatórios e envia o formulário', () => {
     const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 2)
 
     cy.get('#firstName').type('Ricalinea')
     cy.get('#lastName').type('Nascimento')
     cy.get('#email').type('ricalinia@hotmail.com')
     cy.get('#open-text-area').type(longText, { delay: 0 })
-    cy.contains('button', 'Enviar').click
+    cy.contains('button', 'Enviar').click()
 
     cy.get('.success').should('be.visible')
   })
@@ -45,7 +45,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#email').type('ricalinia@hotmail,com')
     cy.get('#open-text-area').type('Teste')
     cy.get('#phone-checkbox').click()
-    cy.contains('button', 'Enviar').click
+    cy.contains('button', 'Enviar').click()
 
     cy.get('.error > strong').should('be.visible')
 
@@ -75,7 +75,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
   })
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
-    cy.contains('button', 'Enviar').click
+    cy.contains('button', 'Enviar').click()
   
   cy.get('.error > strong').should('be.visible')
 
@@ -92,5 +92,11 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.fillMandatoryFieldsAndSubmit(data)
 
     cy.get('.success').should('be.visible')
+  })
+
+  it.only('seleciona um produto (YouTube) por texto', () => {
+    cy.get('#product')
+    .select('YouTube')
+    .should('have.value', 'youtube')
   })
 })
