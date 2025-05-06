@@ -26,7 +26,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#lastName').type('Nascimento')
     cy.get('#email').type('ricalinia@hotmail,com')
     cy.get('#open-text-area').type(longText, { delay: 0 })
-    cy.contains('button', 'Enviar').click
+    cy.contains('button', 'Enviar').click()
 
     cy.get('.error > strong').should('be.visible')
 
@@ -97,7 +97,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   it('seleciona um produto (YouTube) por texto', () => {
     cy.get('#product')
     .select('YouTube')
-    .should('havevalue', 'youtube')
+    .should('have.value', 'youtube')
   })
 
   it('seleciona um produto (Mentoria) por seu valor (value)', () => {
@@ -106,7 +106,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
       .should('have.value', 'mentoria')
   })
 
-  it.only('seleciona um produto (Blog) por seu índice', () => {
+  it('seleciona um produto (Blog) por seu índice', () => {
     cy.get('#product')
       .select(1)
       .should('have.value', 'blog')
