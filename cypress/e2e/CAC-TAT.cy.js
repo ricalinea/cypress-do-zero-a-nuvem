@@ -7,6 +7,8 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('preenche os campos obrigatórios e envia o formulário', () => {
+    cy.clock()
+
     const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 2)
 
     cy.get('#firstName').type('Ricalinea')
@@ -16,10 +18,21 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.contains('button', 'Enviar').click()
 
     cy.get('.success').should('be.visible')
+
+    cy.tick(3000)
+
+    cy.get('.success').should('not.be.visible')
+
+
+    //Os comandos clock() e tick() são usados para controlar o tempo no Cypress.
+    //O comando clock() é usado para "congelar" o tempo, ou seja, para que o Cypress não avance o tempo automaticamente.
+    //O comando tick() é usado para avançar o tempo congelado, ou seja, para simular a passagem do tempo em testes que dependem de temporizadores ou delays.   
   })
 
 
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
+    cy.clock()
+
     const longText = Cypress._.repeat('Curso Cypress do Zero a Nuvem', 20)
 
     cy.get('#firstName').type('Ricalinea')
@@ -29,6 +42,10 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error > strong').should('be.visible')
+
+    cy.tick(3000)
+
+    cy.get('.error > strong').should('not.be.visible')
 
   })
 
@@ -75,13 +92,21 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
   })
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+    cy.clock()
+
     cy.contains('button', 'Enviar').click()
   
   cy.get('.error > strong').should('be.visible')
 
+    cy.tick(3000)
+
+    cy.get('.error > strong').should('not.be.visible')
+
   })
 
   it('envia o formuário com sucesso usando um comando customizado', ()  => {
+    cy.clock()
+
     const data = {
       firstName: 'Ana',
       lastName: 'Silva',
@@ -92,6 +117,10 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.fillMandatoryFieldsAndSubmit(data)
 
     cy.get('.success').should('be.visible')
+
+    cy.tick(3000)
+
+    cy.get('.success').should('not.be.visible')
   })
 
   it('seleciona um produto (YouTube) por texto', () => {
@@ -174,5 +203,58 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')  
 
+  })
+
+    it('exibe e oculta as mensagens de sucesso e erro usando o .invoke', () => {
+      cy.get('.success')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Mensagem enviada com sucesso.')
+      .invoke('hide')
+      .should('not.be.visible')
+      cy.get('.error')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Valide os campos obrigatórios!')
+      .invoke('hide')
+      .should('not.be.visible')
+    })
+
+    //Os comandos Hide() e Show() são usados para ocultar e exibir elementos na página, respectivamente.
+    //O comando Invoke() é usado para chamar um método de um objeto jQuery, neste caso, os métodos show() e hide().
+    //O comando Should() é usado para fazer asserções sobre o estado dos elementos na página.
+    //O comando Contain() é usado para verificar se o elemento contém um texto específico.
+    //O comando And() é usado para encadear múltiplas asserções em um único comando.
+
+    it('preenche o campo da area de texto usando o comando invoke', () => {
+      cy.get('#open-text-area')
+        .invoke('val', 'Texto de teste')
+        .should('have.value', 'Texto de teste')
+    })
+
+  it('faz uma requisição HTTP', () => {
+    cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+      .as('getRequest')
+      .its('status')
+      .should('be.equal', 200)
+    cy.get('@getRequest')
+      .its('statusText')
+      .should('be.equal', 'OK')
+    cy.get('@getRequest')
+      .its('body')
+      .should('include', 'CAC TAT')
+  })
+
+  it('exibe o gato escondido', () => {
+    cy.get('#cat')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+    cy.get('#title')
+      .invoke('text', 'CAT TAT')
+    cy.get('#subtitle')
+      .invoke('text', 'Eu amo gatos')
   })
 })
